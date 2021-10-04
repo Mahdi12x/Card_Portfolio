@@ -1,31 +1,55 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Portfolio.Models;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Portfolio.Controllers
 {
     public class HomeController : Controller
     {
-        
-
-        public HomeController()
+        private readonly List<Service> _services = new List<Service>
         {
-            
-        }
+            new Service(1,"مسابقه"),
+            new Service(2,"مشاوره "),
+            new Service(3,"معامله "),
+            new Service(4,"معاوضه"),
+        };
 
         public IActionResult Index()
         {
             return View();
         }
 
-        
+        public IActionResult Contact()
+        {
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+            return View("Components/Contact/Contact");
+        }
+
+
+        [HttpPost]
+        public IActionResult Contact(ContactMe contact)
+        {
+          
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Error = "لطفا اطلاعات را به صورت صحیح پر کنید";
+                return View("Components/Contact/Contact",contact);
+
+            }
+            ModelState.Clear();
+            var model = new ContactMe()
+            {
+                Services = new SelectList(_services,"Id","Name")
+            };
+
+            ViewBag.Success = "پیام شما موفقیت آمیز ارسال شد";
+            return View("Index");
+        }
+
+
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

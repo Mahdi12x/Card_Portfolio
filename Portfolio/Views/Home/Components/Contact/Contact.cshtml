@@ -1,23 +1,41 @@
-﻿
+﻿@model ContactMe
 <article id="contact" class="panel">
     <header>
         <h2>@ViewData["Contact"]</h2>
     </header>
-    <form action="#" method="post">
+    <form method="post" asp-action="Contact">
         <div>
+            <div>
+                @if (!string.IsNullOrWhiteSpace(ViewBag.success))
+                {
+                    <p class="alert-success">@ViewBag.success</p>
+                }
+                @if (!string.IsNullOrWhiteSpace(ViewBag.Error))
+                {
+                    <p class="alert-danger">@ViewBag.Error</p>
+                }
+            </div>
             <div class="row">
                 <div class="col-6 col-12-medium">
-                    <input type="text" name="name" placeholder="Name" />
+                    <input type="text" asp-for="Name" placeholder="Name" />
                 </div>
                 <div class="col-6 col-12-medium">
-                    <input type="text" name="email" placeholder="Email" />
+                    <input type="text" asp-for="Email" placeholder="Email" />
                 </div>
                 <div class="col-12">
-                    <input type="text" name="subject" placeholder="Subject" />
+                    <input type="text" asp-for="Subject" placeholder="Subject" />
                 </div>
                 <div class="col-12">
-                    <textarea name="message" placeholder="Message" rows="6"></textarea>
+                    <select asp-for="Service"  asp-items="Model.Services">
+                            <option value="0" selected="selected">...نوع سرویس را مشخص کنید</option>
+                        </select>
                 </div>
+                <div class="col-12">
+                    <textarea asp-for="Message" placeholder="Message" rows="6"></textarea>
+                </div><span asp-validation-for="Name"></span>
+                <span style="color: red;" class="text-danger" asp-validation-for="Email"></span>
+                <span style="color: red;" class="text-danger" asp-validation-for="Subject"></span>
+                <span style="color: red;" class="text-danger" asp-validation-for="Message"></span>
                 <div class="col-12">
                     <input type="submit" value="Send Message" />
                 </div>
